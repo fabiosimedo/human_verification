@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Subscription extends Model
 {
+    protected $table = 'subscriptions';
+
     protected $fillable = [
         'user_id',
         'plan',
@@ -25,5 +27,20 @@ class Subscription extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function isFree(): bool
+    {
+        return ($this->plan ?? 'free') === 'free';
+    }
+
+    public function isActive(): bool
+    {
+        return ($this->status ?? 'inactive') === 'active';
+    }
+
+    public function isPaid(): bool
+    {
+        return ! $this->isFree() && $this->isActive();
     }
 }

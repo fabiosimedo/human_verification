@@ -28,6 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = $request->user();
+
+        if (! filled($user->name) || ! filled($user->phone) || ! $user->primaryPublicImage()->exists()) {
+            return redirect()->route('dashboard.profile.edit');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

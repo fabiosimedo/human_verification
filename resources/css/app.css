@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root{
+--hum-bg:#07111f;
+--hum-surface:#0f1c31;
+--hum-text:#f5f7fb;
+--hum-primary:#9eff00;
+}
+
+body{
+background:#07111f;
+color:#f5f7fb;
+}
+
+.hum-card{
+background:linear-gradient(180deg,#0f1c31,#0a1321);
+border-radius:24px;
+padding:24px;
+border:1px solid rgba(255,255,255,0.06);
+box-shadow:0 20px 40px rgba(0,0,0,0.4);
+}
+
+.hum-btn-primary{
+background:#9eff00;
+color:#0b111b;
+padding:12px 20px;
+border-radius:14px;
+font-weight:600;
+}
+
+.hum-btn-primary:hover{
+filter:brightness(1.1);
+}
+
+.hum-input{
+background:#0a1628;
+border:1px solid rgba(255,255,255,0.1);
+border-radius:12px;
+padding:12px;
+width:100%;
+color:white;
+}
+
+.hum-label{
+font-size:14px;
+margin-bottom:6px;
+display:block;
+}

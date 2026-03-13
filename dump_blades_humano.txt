@@ -1,0 +1,2069 @@
+===== BLADE VIEWS =====
+
+
+===== FILE: resources/views/auth/confirm-password.blade.php =====
+27 resources/views/auth/confirm-password.blade.php
+----- CONTENT START -----
+<x-guest-layout>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+    </div>
+
+    <form method="POST" action="{{ route('password.confirm') }}">
+        @csrf
+
+        <!-- Password -->
+        <div>
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="current-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <div class="flex justify-end mt-4">
+            <x-primary-button>
+                {{ __('Confirm') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/auth/forgot-password.blade.php =====
+51 resources/views/auth/forgot-password.blade.php
+----- CONTENT START -----
+<x-guest-layout>
+
+<div>
+
+<h1 class="text-2xl font-bold text-slate-900">
+Recuperar senha
+</h1>
+
+<p class="mt-1 text-sm text-slate-500">
+Informe seu email para receber o link de recuperação
+</p>
+
+<x-auth-session-status class="mt-4" :status="session('status')" />
+
+<form method="POST" action="{{ route('password.email') }}" class="mt-6 space-y-5">
+
+@csrf
+
+<div>
+<x-input-label for="email" value="Email" />
+
+<x-text-input
+id="email"
+class="mt-1 block w-full"
+type="email"
+name="email"
+:value="old('email')"
+required
+/>
+
+<x-input-error :messages="$errors->get('email')" />
+
+</div>
+
+<button
+type="submit"
+class="w-full rounded-xl bg-black py-3 text-white font-semibold">
+Enviar link
+</button>
+
+<a
+href="{{ route('login') }}"
+class="block text-center text-sm text-gray-600">
+Voltar ao login
+</a>
+
+</form>
+
+</div>
+
+</x-guest-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/auth/login.blade.php =====
+90 resources/views/auth/login.blade.php
+----- CONTENT START -----
+<x-guest-layout>
+
+<div>
+
+<h1 class="text-2xl font-bold text-slate-900">
+Entrar
+</h1>
+
+<p class="mt-1 text-sm text-slate-500">
+Acesse sua conta
+</p>
+
+<x-auth-session-status class="mt-4" :status="session('status')" />
+
+<form method="POST" action="{{ route('login') }}" class="mt-6 space-y-5">
+
+@csrf
+
+<div>
+<x-input-label for="email" value="Email" />
+
+<x-text-input
+id="email"
+class="mt-1 block w-full"
+type="email"
+name="email"
+:value="old('email')"
+required
+autofocus
+/>
+<x-input-error :messages="$errors->get('email')" />
+</div>
+
+<div>
+
+<div class="flex justify-between">
+
+<x-input-label for="password" value="Senha" />
+
+@if (Route::has('password.request'))
+<a class="text-sm text-blue-600" href="{{ route('password.request') }}">
+Esqueceu?
+</a>
+@endif
+
+</div>
+
+<x-text-input
+id="password"
+class="mt-1 block w-full"
+type="password"
+name="password"
+required
+/>
+
+<x-input-error :messages="$errors->get('password')" />
+
+</div>
+
+<div class="flex items-center gap-2">
+
+<input type="checkbox" name="remember" id="remember" class="rounded border-gray-300">
+
+<label for="remember" class="text-sm text-gray-600">
+Lembrar de mim
+</label>
+
+</div>
+
+<button
+type="submit"
+class="w-full rounded-xl bg-black py-3 text-white font-semibold">
+Entrar
+</button>
+
+@if (Route::has('register'))
+
+<a
+href="{{ route('register') }}"
+class="block text-center text-sm text-gray-600">
+Criar conta
+</a>
+
+@endif
+
+</form>
+
+</div>
+
+</x-guest-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/auth/register.blade.php =====
+52 resources/views/auth/register.blade.php
+----- CONTENT START -----
+<x-guest-layout>
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
+
+        <!-- Name -->
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        </div>
+
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input id="password" class="block mt-1 w-full"
+                            type="password"
+                            name="password"
+                            required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                            type="password"
+                            name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                {{ __('Already registered?') }}
+            </a>
+
+            <x-primary-button class="ms-4">
+                {{ __('Register') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/auth/reset-password.blade.php =====
+39 resources/views/auth/reset-password.blade.php
+----- CONTENT START -----
+<x-guest-layout>
+    <form method="POST" action="{{ route('password.store') }}">
+        @csrf
+
+        <!-- Password Reset Token -->
+        <input type="hidden" name="token" value="{{ $request->route('token') }}">
+
+        <!-- Email Address -->
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                                type="password"
+                                name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
+            <x-primary-button>
+                {{ __('Reset Password') }}
+            </x-primary-button>
+        </div>
+    </form>
+</x-guest-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/auth/verify-email.blade.php =====
+31 resources/views/auth/verify-email.blade.php
+----- CONTENT START -----
+<x-guest-layout>
+    <div class="mb-4 text-sm text-gray-600">
+        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+    </div>
+
+    @if (session('status') == 'verification-link-sent')
+        <div class="mb-4 font-medium text-sm text-green-600">
+            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        </div>
+    @endif
+
+    <div class="mt-4 flex items-center justify-between">
+        <form method="POST" action="{{ route('verification.send') }}">
+            @csrf
+
+            <div>
+                <x-primary-button>
+                    {{ __('Resend Verification Email') }}
+                </x-primary-button>
+            </div>
+        </form>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+
+            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                {{ __('Log Out') }}
+            </button>
+        </form>
+    </div>
+</x-guest-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/application-logo.blade.php =====
+3 resources/views/components/application-logo.blade.php
+----- CONTENT START -----
+<svg viewBox="0 0 316 316" xmlns="http://www.w3.org/2000/svg" {{ $attributes }}>
+    <path d="M305.8 81.125C305.77 80.995 305.69 80.885 305.65 80.755C305.56 80.525 305.49 80.285 305.37 80.075C305.29 79.935 305.17 79.815 305.07 79.685C304.94 79.515 304.83 79.325 304.68 79.175C304.55 79.045 304.39 78.955 304.25 78.845C304.09 78.715 303.95 78.575 303.77 78.475L251.32 48.275C249.97 47.495 248.31 47.495 246.96 48.275L194.51 78.475C194.33 78.575 194.19 78.725 194.03 78.845C193.89 78.955 193.73 79.045 193.6 79.175C193.45 79.325 193.34 79.515 193.21 79.685C193.11 79.815 192.99 79.935 192.91 80.075C192.79 80.285 192.71 80.525 192.63 80.755C192.58 80.875 192.51 80.995 192.48 81.125C192.38 81.495 192.33 81.875 192.33 82.265V139.625L148.62 164.795V52.575C148.62 52.185 148.57 51.805 148.47 51.435C148.44 51.305 148.36 51.195 148.32 51.065C148.23 50.835 148.16 50.595 148.04 50.385C147.96 50.245 147.84 50.125 147.74 49.995C147.61 49.825 147.5 49.635 147.35 49.485C147.22 49.355 147.06 49.265 146.92 49.155C146.76 49.025 146.62 48.885 146.44 48.785L93.99 18.585C92.64 17.805 90.98 17.805 89.63 18.585L37.18 48.785C37 48.885 36.86 49.035 36.7 49.155C36.56 49.265 36.4 49.355 36.27 49.485C36.12 49.635 36.01 49.825 35.88 49.995C35.78 50.125 35.66 50.245 35.58 50.385C35.46 50.595 35.38 50.835 35.3 51.065C35.25 51.185 35.18 51.305 35.15 51.435C35.05 51.805 35 52.185 35 52.575V232.235C35 233.795 35.84 235.245 37.19 236.025L142.1 296.425C142.33 296.555 142.58 296.635 142.82 296.725C142.93 296.765 143.04 296.835 143.16 296.865C143.53 296.965 143.9 297.015 144.28 297.015C144.66 297.015 145.03 296.965 145.4 296.865C145.5 296.835 145.59 296.775 145.69 296.745C145.95 296.655 146.21 296.565 146.45 296.435L251.36 236.035C252.72 235.255 253.55 233.815 253.55 232.245V174.885L303.81 145.945C305.17 145.165 306 143.725 306 142.155V82.265C305.95 81.875 305.89 81.495 305.8 81.125ZM144.2 227.205L100.57 202.515L146.39 176.135L196.66 147.195L240.33 172.335L208.29 190.625L144.2 227.205ZM244.75 114.995V164.795L226.39 154.225L201.03 139.625V89.825L219.39 100.395L244.75 114.995ZM249.12 57.105L292.81 82.265L249.12 107.425L205.43 82.265L249.12 57.105ZM114.49 184.425L96.13 194.995V85.305L121.49 70.705L139.85 60.135V169.815L114.49 184.425ZM91.76 27.425L135.45 52.585L91.76 77.745L48.07 52.585L91.76 27.425ZM43.67 60.135L62.03 70.705L87.39 85.305V202.545V202.555V202.565C87.39 202.735 87.44 202.895 87.46 203.055C87.49 203.265 87.49 203.485 87.55 203.695V203.705C87.6 203.875 87.69 204.035 87.76 204.195C87.84 204.375 87.89 204.575 87.99 204.745C87.99 204.745 87.99 204.755 88 204.755C88.09 204.905 88.22 205.035 88.33 205.175C88.45 205.335 88.55 205.495 88.69 205.635L88.7 205.645C88.82 205.765 88.98 205.855 89.12 205.965C89.28 206.085 89.42 206.225 89.59 206.325C89.6 206.325 89.6 206.325 89.61 206.335C89.62 206.335 89.62 206.345 89.63 206.345L139.87 234.775V285.065L43.67 229.705V60.135ZM244.75 229.705L148.58 285.075V234.775L219.8 194.115L244.75 179.875V229.705ZM297.2 139.625L253.49 164.795V114.995L278.85 100.395L297.21 89.825V139.625H297.2Z"/>
+</svg>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/auth-session-status.blade.php =====
+7 resources/views/components/auth-session-status.blade.php
+----- CONTENT START -----
+@props(['status'])
+
+@if ($status)
+    <div {{ $attributes->merge(['class' => 'font-medium text-sm text-green-600']) }}>
+        {{ $status }}
+    </div>
+@endif
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/danger-button.blade.php =====
+3 resources/views/components/danger-button.blade.php
+----- CONTENT START -----
+<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150']) }}>
+    {{ $slot }}
+</button>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/dropdown.blade.php =====
+35 resources/views/components/dropdown.blade.php
+----- CONTENT START -----
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'py-1 bg-white'])
+
+@php
+$alignmentClasses = match ($align) {
+    'left' => 'ltr:origin-top-left rtl:origin-top-right start-0',
+    'top' => 'origin-top',
+    default => 'ltr:origin-top-right rtl:origin-top-left end-0',
+};
+
+$width = match ($width) {
+    '48' => 'w-48',
+    default => $width,
+};
+@endphp
+
+<div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+    <div @click="open = ! open">
+        {{ $trigger }}
+    </div>
+
+    <div x-show="open"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="transition ease-in duration-75"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
+            style="display: none;"
+            @click="open = false">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
+            {{ $content }}
+        </div>
+    </div>
+</div>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/dropdown-link.blade.php =====
+1 resources/views/components/dropdown-link.blade.php
+----- CONTENT START -----
+<a {{ $attributes->merge(['class' => 'block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out']) }}>{{ $slot }}</a>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/input-error.blade.php =====
+9 resources/views/components/input-error.blade.php
+----- CONTENT START -----
+@props(['messages'])
+
+@if ($messages)
+    <ul {{ $attributes->merge(['class' => 'text-sm text-red-600 space-y-1']) }}>
+        @foreach ((array) $messages as $message)
+            <li>{{ $message }}</li>
+        @endforeach
+    </ul>
+@endif
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/input-label.blade.php =====
+5 resources/views/components/input-label.blade.php
+----- CONTENT START -----
+@props(['value'])
+
+<label {{ $attributes->merge(['class' => 'block font-medium text-sm text-gray-700']) }}>
+    {{ $value ?? $slot }}
+</label>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/link-modal.blade.php =====
+67 resources/views/components/link-modal.blade.php
+----- CONTENT START -----
+<div
+id="linkModal"
+class="fixed inset-0 bg-black/50 hidden flex items-center justify-center">
+
+<div class="bg-white rounded-2xl p-6 w-full max-w-md">
+
+<h2 class="text-lg font-semibold">
+Editar link
+</h2>
+
+<form
+id="linkForm"
+method="POST"
+class="mt-4 space-y-4">
+
+@csrf
+
+<div>
+<label class="text-sm font-medium">
+Nome do link
+</label>
+
+<input
+id="linkTitle"
+name="title"
+type="text"
+class="mt-1 w-full border rounded-lg p-2"
+required
+>
+</div>
+
+<div>
+<label class="text-sm font-medium">
+URL
+</label>
+
+<input
+id="linkUrl"
+name="url"
+type="url"
+class="mt-1 w-full border rounded-lg p-2"
+required
+>
+</div>
+
+<div class="flex justify-between">
+
+<button
+type="submit"
+class="bg-black text-white px-4 py-2 rounded-lg">
+Salvar
+</button>
+
+<button
+type="button"
+onclick="closeModal()"
+class="text-gray-500">
+Cancelar
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/modal.blade.php =====
+78 resources/views/components/modal.blade.php
+----- CONTENT START -----
+@props([
+    'name',
+    'show' => false,
+    'maxWidth' => '2xl'
+])
+
+@php
+$maxWidth = [
+    'sm' => 'sm:max-w-sm',
+    'md' => 'sm:max-w-md',
+    'lg' => 'sm:max-w-lg',
+    'xl' => 'sm:max-w-xl',
+    '2xl' => 'sm:max-w-2xl',
+][$maxWidth];
+@endphp
+
+<div
+    x-data="{
+        show: @js($show),
+        focusables() {
+            // All focusable element types...
+            let selector = 'a, button, input:not([type=\'hidden\']), textarea, select, details, [tabindex]:not([tabindex=\'-1\'])'
+            return [...$el.querySelectorAll(selector)]
+                // All non-disabled elements...
+                .filter(el => ! el.hasAttribute('disabled'))
+        },
+        firstFocusable() { return this.focusables()[0] },
+        lastFocusable() { return this.focusables().slice(-1)[0] },
+        nextFocusable() { return this.focusables()[this.nextFocusableIndex()] || this.firstFocusable() },
+        prevFocusable() { return this.focusables()[this.prevFocusableIndex()] || this.lastFocusable() },
+        nextFocusableIndex() { return (this.focusables().indexOf(document.activeElement) + 1) % (this.focusables().length + 1) },
+        prevFocusableIndex() { return Math.max(0, this.focusables().indexOf(document.activeElement)) -1 },
+    }"
+    x-init="$watch('show', value => {
+        if (value) {
+            document.body.classList.add('overflow-y-hidden');
+            {{ $attributes->has('focusable') ? 'setTimeout(() => firstFocusable().focus(), 100)' : '' }}
+        } else {
+            document.body.classList.remove('overflow-y-hidden');
+        }
+    })"
+    x-on:open-modal.window="$event.detail == '{{ $name }}' ? show = true : null"
+    x-on:close-modal.window="$event.detail == '{{ $name }}' ? show = false : null"
+    x-on:close.stop="show = false"
+    x-on:keydown.escape.window="show = false"
+    x-on:keydown.tab.prevent="$event.shiftKey || nextFocusable().focus()"
+    x-on:keydown.shift.tab.prevent="prevFocusable().focus()"
+    x-show="show"
+    class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
+    style="display: {{ $show ? 'block' : 'none' }};"
+>
+    <div
+        x-show="show"
+        class="fixed inset-0 transform transition-all"
+        x-on:click="show = false"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    >
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <div
+        x-show="show"
+        class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
+        x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    >
+        {{ $slot }}
+    </div>
+</div>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/nav-link.blade.php =====
+11 resources/views/components/nav-link.blade.php
+----- CONTENT START -----
+@props(['active'])
+
+@php
+$classes = ($active ?? false)
+            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
+            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out';
+@endphp
+
+<a {{ $attributes->merge(['class' => $classes]) }}>
+    {{ $slot }}
+</a>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/primary-button.blade.php =====
+3 resources/views/components/primary-button.blade.php
+----- CONTENT START -----
+<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150']) }}>
+    {{ $slot }}
+</button>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/responsive-nav-link.blade.php =====
+11 resources/views/components/responsive-nav-link.blade.php
+----- CONTENT START -----
+@props(['active'])
+
+@php
+$classes = ($active ?? false)
+            ? 'block w-full ps-3 pe-4 py-2 border-l-4 border-indigo-400 text-start text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition duration-150 ease-in-out'
+            : 'block w-full ps-3 pe-4 py-2 border-l-4 border-transparent text-start text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition duration-150 ease-in-out';
+@endphp
+
+<a {{ $attributes->merge(['class' => $classes]) }}>
+    {{ $slot }}
+</a>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/secondary-button.blade.php =====
+3 resources/views/components/secondary-button.blade.php
+----- CONTENT START -----
+<button {{ $attributes->merge(['type' => 'button', 'class' => 'inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150']) }}>
+    {{ $slot }}
+</button>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/components/text-input.blade.php =====
+3 resources/views/components/text-input.blade.php
+----- CONTENT START -----
+@props(['disabled' => false])
+
+<input @disabled($disabled) {{ $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) }}>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/dashboard.blade.php =====
+17 resources/views/dashboard.blade.php
+----- CONTENT START -----
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/dashboard/index.blade.php =====
+57 resources/views/dashboard/index.blade.php
+----- CONTENT START -----
+<x-app-layout>
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+
+<div class="flex items-center justify-between">
+
+<h1 class="text-2xl font-bold text-gray-900">
+Dashboard
+</h1>
+
+<a
+href="{{ route('preview.card') }}"
+class="rounded-xl bg-black px-4 py-2 text-sm text-white">
+Ver meu card
+</a>
+
+</div>
+
+<p class="text-sm text-gray-600 mt-2">
+Gerencie seus links e acompanhe seu perfil público.
+</p>
+
+<div class="mt-8 grid gap-6 md:grid-cols-2">
+
+<a
+href="{{ route('dashboard.links.index') }}"
+class="rounded-2xl border p-6 hover:bg-gray-50">
+
+<h2 class="font-semibold text-lg">
+Links de vendas
+</h2>
+
+<p class="text-sm text-gray-500 mt-1">
+Gerencie seus links associados ao card
+</p>
+
+</a>
+
+<a
+href="{{ route('dashboard.profile.edit') }}"
+class="rounded-2xl border p-6 hover:bg-gray-50">
+
+<h2 class="font-semibold text-lg">
+Editar perfil
+</h2>
+
+<p class="text-sm text-gray-500 mt-1">
+Atualize seus dados
+</p>
+
+</a>
+
+</div>
+
+</div>
+
+</x-app-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/dashboard/links/index.blade.php =====
+263 resources/views/dashboard/links/index.blade.php
+----- CONTENT START -----
+<x-app-layout>
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">
+                    Links de vendas
+                </h1>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    Você pode criar até {{ $linksLimit }} link(s) no seu plano atual.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                onclick="openCreateModal()"
+                class="rounded-xl bg-black px-4 py-2 text-sm text-white"
+            >
+                Criar link
+            </button>
+        </div>
+
+        @if (session('status'))
+            <div class="mt-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        @if ($errors->has('general'))
+            <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {{ $errors->first('general') }}
+            </div>
+        @endif
+
+        @if ($errors->has('title') || $errors->has('url'))
+            <div class="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                Verifique os dados do link e tente novamente.
+            </div>
+        @endif
+
+        <div class="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-100 text-left text-sm text-gray-700">
+                        <tr>
+                            <th class="p-3">Nome</th>
+                            <th class="p-3">Link</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse($links as $link)
+                            <tr class="border-t border-gray-200 align-top">
+                                <td class="p-3">
+                                    <div class="font-medium text-gray-900">
+                                        {{ $link->title }}
+                                    </div>
+                                </td>
+
+                                <td class="p-3 text-sm text-gray-600">
+                                    <div class="max-w-[320px] truncate">
+                                        {{ $link->url }}
+                                    </div>
+                                </td>
+
+                                <td class="p-3">
+                                    @if($link->is_active)
+                                        <span class="rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700">
+                                            Ativo
+                                        </span>
+                                    @else
+                                        <span class="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-500">
+                                            Inativo
+                                        </span>
+                                    @endif
+                                </td>
+
+                                <td class="p-3">
+                                    <div class="flex flex-wrap gap-3 text-sm">
+                                        <a
+                                            href="https://wa.me/?text={{ urlencode($link->url) }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="text-green-600 hover:underline"
+                                        >
+                                            Compartilhar
+                                        </a>
+
+                                        <button
+                                            type="button"
+                                            onclick='openEditModal(@json([
+                                                "id" => $link->id,
+                                                "title" => $link->title,
+                                                "url" => $link->url,
+                                            ]))'
+                                            class="text-blue-600 hover:underline"
+                                        >
+                                            Editar
+                                        </button>
+
+                                        <form method="POST" action="{{ route('dashboard.links.toggle', $link) }}">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <button type="submit" class="text-amber-600 hover:underline">
+                                                {{ $link->is_active ? 'Desativar' : 'Ativar' }}
+                                            </button>
+                                        </form>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ route('dashboard.links.destroy', $link) }}"
+                                            onsubmit="return confirm('Tem certeza que deseja remover este link?')"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit" class="text-red-600 hover:underline">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-sm text-gray-500">
+                                    Nenhum link cadastrado ainda.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div
+            id="linkModal"
+            class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 p-4"
+        >
+            <div class="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
+                <div class="flex items-center justify-between">
+                    <h2 id="linkModalTitle" class="text-lg font-semibold text-gray-900">
+                        Criar link
+                    </h2>
+
+                    <button
+                        type="button"
+                        onclick="closeModal()"
+                        class="text-xl leading-none text-gray-400 hover:text-gray-700"
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <form id="linkForm" method="POST" action="{{ route('dashboard.links.store') }}" class="mt-6 space-y-5">
+                    @csrf
+
+                    <input type="hidden" name="_method" id="linkFormMethod" value="POST">
+
+                    <div>
+                        <x-input-label for="linkTitle" value="Nome" />
+                        <x-text-input
+                            id="linkTitle"
+                            name="title"
+                            type="text"
+                            class="mt-1 block w-full"
+                            :value="old('title')"
+                            required
+                        />
+                        <x-input-error class="mt-2" :messages="$errors->get('title')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="linkUrl" value="URL" />
+                        <x-text-input
+                            id="linkUrl"
+                            name="url"
+                            type="url"
+                            class="mt-1 block w-full"
+                            :value="old('url')"
+                            required
+                        />
+                        <x-input-error class="mt-2" :messages="$errors->get('url')" />
+                    </div>
+
+                    <div class="flex items-center justify-end gap-3">
+                        <button
+                            type="button"
+                            onclick="closeModal()"
+                            class="rounded-xl border border-gray-300 px-4 py-2 text-sm text-gray-700"
+                        >
+                            Cancelar
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="rounded-xl bg-black px-4 py-2 text-sm text-white"
+                        >
+                            Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCreateModal() {
+            const modal = document.getElementById('linkModal');
+            const title = document.getElementById('linkModalTitle');
+            const form = document.getElementById('linkForm');
+            const method = document.getElementById('linkFormMethod');
+            const inputTitle = document.getElementById('linkTitle');
+            const inputUrl = document.getElementById('linkUrl');
+
+            title.textContent = 'Criar link';
+            form.action = @json(route('dashboard.links.store'));
+            method.value = 'POST';
+            inputTitle.value = '';
+            inputUrl.value = '';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function openEditModal(link) {
+            const modal = document.getElementById('linkModal');
+            const title = document.getElementById('linkModalTitle');
+            const form = document.getElementById('linkForm');
+            const method = document.getElementById('linkFormMethod');
+            const inputTitle = document.getElementById('linkTitle');
+            const inputUrl = document.getElementById('linkUrl');
+
+            title.textContent = 'Editar link';
+            form.action = '/dashboard/links/' + link.id;
+            method.value = 'PATCH';
+            inputTitle.value = link.title ?? '';
+            inputUrl.value = link.url ?? '';
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('linkModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        @if ($errors->has('title') || $errors->has('url'))
+            document.addEventListener('DOMContentLoaded', function () {
+                const hasOldValues = @json(filled(old('title')) || filled(old('url')));
+                if (hasOldValues) {
+                    openCreateModal();
+                    document.getElementById('linkTitle').value = @json(old('title', ''));
+                    document.getElementById('linkUrl').value = @json(old('url', ''));
+                }
+            });
+        @endif
+    </script>
+</x-app-layout>
+----- CONTENT END -----
+
+
+===== FILE: resources/views/dashboard/profile.blade.php =====
+208 resources/views/dashboard/profile.blade.php
+----- CONTENT START -----
+<x-app-layout>
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold text-gray-900">
+            Criar seu card
+        </h1>
+
+        <p class="text-sm text-gray-600 mt-1">
+            Preencha os dados abaixo para ativar sua conta
+        </p>
+
+        <form
+            method="POST"
+            action="{{ route('dashboard.profile.update') }}"
+            enctype="multipart/form-data"
+            class="mt-8 grid gap-8 md:grid-cols-2"
+        >
+            @csrf
+            @method('PUT')
+
+            <div class="space-y-6">
+                @if (session('status'))
+                    <div class="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                @if ($errors->has('general'))
+                    <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {{ $errors->first('general') }}
+                    </div>
+                @endif
+
+                <div>
+                    <x-input-label for="name" value="Nome" />
+
+                    <x-text-input
+                        id="name"
+                        class="mt-1 block w-full"
+                        name="name"
+                        type="text"
+                        :value="old('name', $user->name)"
+                        required
+                    />
+
+                    <x-input-error :messages="$errors->get('name')" />
+                </div>
+
+                <div>
+                    <x-input-label for="phone" value="Telefone" />
+
+                    <x-text-input
+                        id="phone"
+                        class="mt-1 block w-full"
+                        name="phone"
+                        type="text"
+                        :value="old('phone', $user->phone)"
+                        placeholder="(11) 99999-0000"
+                        required
+                    />
+
+                    <x-input-error :messages="$errors->get('phone')" />
+                </div>
+
+                <div>
+                    <x-input-label for="img" value="Imagem do card" />
+
+                    <input
+                        id="img"
+                        type="file"
+                        name="img"
+                        class="mt-2 block w-full text-sm"
+                        accept=".jpg,.jpeg,.png,.webp"
+                        @if (! ($user->media->firstWhere('is_primary', true) ?? $user->media->first())) required @endif
+                    />
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        Preferencialmente imagens em retrato
+                    </p>
+
+                    <x-input-error :messages="$errors->get('img')" />
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-black py-3 text-white font-semibold"
+                >
+                    Salvar e criar card
+                </button>
+            </div>
+
+            <div class="flex items-center justify-center">
+                <div class="w-full max-w-[280px] rounded-3xl border border-gray-200 bg-white p-4 shadow-sm">
+                    <div class="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50">
+                        <div id="card-preview-image-wrap" class="h-[280px] w-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                            @php
+                                $previewImage = $primaryImage?->url() ?? null;
+                            @endphp
+
+                            @if ($previewImage)
+                                <img
+                                    id="card-preview-image"
+                                    src="{{ $previewImage }}"
+                                    alt="Preview do card"
+                                    class="h-full w-full object-cover"
+                                >
+                            @else
+                                <div
+                                    id="card-preview-placeholder"
+                                    class="flex h-full w-full items-center justify-center text-sm text-gray-400"
+                                >
+                                    Preview da imagem
+                                </div>
+                                <img
+                                    id="card-preview-image"
+                                    src=""
+                                    alt="Preview do card"
+                                    class="hidden h-full w-full object-cover"
+                                >
+                            @endif
+                        </div>
+
+                        <div class="p-4">
+                            <div
+                                id="card-preview-name"
+                                class="text-lg font-bold text-gray-900 break-words"
+                            >
+                                {{ old('name', $user->name ?: 'Seu nome') }}
+                            </div>
+
+                            <div
+                                id="card-preview-phone"
+                                class="mt-2 text-sm text-gray-600 break-all"
+                            >
+                                {{ old('phone', $user->phone ?: '(00) 00000-0000') }}
+                            </div>
+
+                            <a
+                                href="{{ url('/p/' . $user->slug) }}"
+                                target="_blank"
+                                class="mt-4 block rounded-xl bg-black px-4 py-3 text-center text-sm font-semibold text-white hover:opacity-90"
+                            >
+                                HUMANO VERIFICADO
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const inputName = document.getElementById('name');
+            const inputPhone = document.getElementById('phone');
+            const inputImg = document.getElementById('img');
+
+            const previewName = document.getElementById('card-preview-name');
+            const previewPhone = document.getElementById('card-preview-phone');
+            const previewImage = document.getElementById('card-preview-image');
+            const previewPlaceholder = document.getElementById('card-preview-placeholder');
+
+            function updateName() {
+                const value = (inputName.value || '').trim();
+                previewName.textContent = value || 'Seu nome';
+            }
+
+            function updatePhone() {
+                const value = (inputPhone.value || '').trim();
+                previewPhone.textContent = value || '(00) 00000-0000';
+            }
+
+            function updateImage(event) {
+                const file = event.target.files && event.target.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Selecione uma imagem JPG, JPEG, PNG ou WEBP.');
+                    inputImg.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden');
+
+                    if (previewPlaceholder) {
+                        previewPlaceholder.classList.add('hidden');
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            inputName.addEventListener('input', updateName);
+            inputPhone.addEventListener('input', updatePhone);
+            inputImg.addEventListener('change', updateImage);
+
+            updateName();
+            updatePhone();
+        });
+    </script>
+</x-app-layout>
+----- CONTENT END -----
+
+
+===== FILE: resources/views/layouts/app.blade.php =====
+36 resources/views/layouts/app.blade.php
+----- CONTENT START -----
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
+
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
+    </body>
+</html>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/layouts/guest.blade.php =====
+28 resources/views/layouts/guest.blade.php
+----- CONTENT START -----
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ config('app.name','Humano') }}</title>
+
+@vite(['resources/css/app.css','resources/js/app.js'])
+
+</head>
+
+<body class="min-h-screen bg-[#08111d] text-white antialiased">
+
+<div class="flex min-h-screen items-center justify-center px-4">
+
+<div class="w-full max-w-lg rounded-3xl bg-white p-8 text-slate-900 shadow-xl">
+
+{{ $slot }}
+
+</div>
+
+</div>
+
+</body>
+</html>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/layouts/navigation.blade.php =====
+100 resources/views/layouts/navigation.blade.php
+----- CONTENT START -----
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+    <!-- Primary Navigation Menu -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ route('dashboard') }}">
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                        {{ __('Dashboard') }}
+                    </x-nav-link>
+                </div>
+            </div>
+
+            <!-- Settings Dropdown -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <div>{{ Auth::user()->name }}</div>
+
+                            <div class="ms-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <!-- Authentication -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                {{ __('Log Out') }}
+                            </x-dropdown-link>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
+            </div>
+
+            <!-- Hamburger -->
+            <div class="-me-2 flex items-center sm:hidden">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Responsive Navigation Menu -->
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+        </div>
+
+        <!-- Responsive Settings Options -->
+        <div class="pt-4 pb-1 border-t border-gray-200">
+            <div class="px-4">
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+            </div>
+
+            <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('profile.edit')">
+                    {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                <!-- Authentication -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-responsive-nav-link>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/layouts/public.blade.php =====
+23 resources/views/layouts/public.blade.php
+----- CONTENT START -----
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ $metaTitle ?? config('app.name') }}</title>
+    <meta name="description" content="{{ $metaDescription ?? '' }}">
+
+    {{-- OG para WhatsApp --}}
+    <meta property="og:title" content="{{ $metaTitle ?? '' }}">
+    <meta property="og:description" content="{{ $metaDescription ?? '' }}">
+    <meta property="og:image" content="{{ $metaImage ?? '' }}">
+    <meta property="og:url" content="{{ $metaUrl ?? request()->fullUrl() }}">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-gray-50">
+    @yield('content')
+</body>
+</html>
+----- CONTENT END -----
+
+
+===== FILE: resources/views/profile/edit.blade.php =====
+36 resources/views/profile/edit.blade.php
+----- CONTENT START -----
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Profile') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
+        @if ($errors->has('general'))
+            <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                {{ $errors->first('general') }}
+            </div>
+        @endif
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.update-profile-information-form')
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.update-password-form')
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.delete-user-form')
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/profile/partials/delete-user-form.blade.php =====
+55 resources/views/profile/partials/delete-user-form.blade.php
+----- CONTENT START -----
+<section class="space-y-6">
+    <header>
+        <h2 class="text-lg font-medium text-gray-900">
+            {{ __('Delete Account') }}
+        </h2>
+
+        <p class="mt-1 text-sm text-gray-600">
+            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+        </p>
+    </header>
+
+    <x-danger-button
+        x-data=""
+        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+    >{{ __('Delete Account') }}</x-danger-button>
+
+    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
+        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+            @csrf
+            @method('delete')
+
+            <h2 class="text-lg font-medium text-gray-900">
+                {{ __('Are you sure you want to delete your account?') }}
+            </h2>
+
+            <p class="mt-1 text-sm text-gray-600">
+                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+            </p>
+
+            <div class="mt-6">
+                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+
+                <x-text-input
+                    id="password"
+                    name="password"
+                    type="password"
+                    class="mt-1 block w-3/4"
+                    placeholder="{{ __('Password') }}"
+                />
+
+                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button x-on:click="$dispatch('close')">
+                    {{ __('Cancel') }}
+                </x-secondary-button>
+
+                <x-danger-button class="ms-3">
+                    {{ __('Delete Account') }}
+                </x-danger-button>
+            </div>
+        </form>
+    </x-modal>
+</section>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/profile/partials/update-password-form.blade.php =====
+48 resources/views/profile/partials/update-password-form.blade.php
+----- CONTENT START -----
+<section>
+    <header>
+        <h2 class="text-lg font-medium text-gray-900">
+            {{ __('Update Password') }}
+        </h2>
+
+        <p class="mt-1 text-sm text-gray-600">
+            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+        </p>
+    </header>
+
+    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+        @csrf
+        @method('put')
+
+        <div>
+            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
+            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
+            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+        </div>
+
+        <div>
+            <x-input-label for="update_password_password" :value="__('New Password')" />
+            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+        </div>
+
+        <div>
+            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
+            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
+            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center gap-4">
+            <x-primary-button>{{ __('Save') }}</x-primary-button>
+
+            @if (session('status') === 'password-updated')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 2000)"
+                    class="text-sm text-gray-600"
+                >{{ __('Saved.') }}</p>
+            @endif
+        </div>
+    </form>
+</section>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/profile/partials/update-profile-information-form.blade.php =====
+64 resources/views/profile/partials/update-profile-information-form.blade.php
+----- CONTENT START -----
+<section>
+    <header>
+        <h2 class="text-lg font-medium text-gray-900">
+            {{ __('Profile Information') }}
+        </h2>
+
+        <p class="mt-1 text-sm text-gray-600">
+            {{ __("Update your account's profile information and email address.") }}
+        </p>
+    </header>
+
+    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+        @csrf
+    </form>
+
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+        @csrf
+        @method('patch')
+
+        <div>
+            <x-input-label for="name" :value="__('Name')" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        </div>
+
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+
+            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+                <div>
+                    <p class="text-sm mt-2 text-gray-800">
+                        {{ __('Your email address is unverified.') }}
+
+                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            {{ __('Click here to re-send the verification email.') }}
+                        </button>
+                    </p>
+
+                    @if (session('status') === 'verification-link-sent')
+                        <p class="mt-2 font-medium text-sm text-green-600">
+                            {{ __('A new verification link has been sent to your email address.') }}
+                        </p>
+                    @endif
+                </div>
+            @endif
+        </div>
+
+        <div class="flex items-center gap-4">
+            <x-primary-button>{{ __('Save') }}</x-primary-button>
+
+            @if (session('status') === 'profile-updated')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 2000)"
+                    class="text-sm text-gray-600"
+                >{{ __('Saved.') }}</p>
+            @endif
+        </div>
+    </form>
+</section>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/public/link.blade.php =====
+213 resources/views/public/link.blade.php
+----- CONTENT START -----
+@php
+    $mockProfile = $profile ?? (object) [
+        'display_name' => 'Ana Carolina Ribeiro',
+        'photo_url' => 'https://humano.biologicbeing.com/images/profile-card.png',
+        'phone' => '+55 11 99999-0000',
+        'is_verified' => true,
+        'bio' => 'Perfil público para validação de identidade humana com foco em confiança, autenticidade e presença digital.',
+        'public_code' => 'HUM-ACR-2026',
+        'cta_url' => 'https://linkdomeuproduto.com',
+    ];
+
+    $profile = $mockProfile;
+
+    $profileUrl = url()->current();
+    $productUrl = $profile->cta_url ?? 'https://linkdomeuproduto.com';
+
+    $metaTitle = $metaTitle ?? ($profile->display_name . ' • Perfil humano verificado');
+    $metaDescription = $metaDescription ?? 'Confirme a identidade, veja informações públicas e valide que este perfil pertence a uma pessoa real.';
+    $ogImageUrl = $ogImageUrl ?? 'https://humano.biologicbeing.com/images/profile-card.png';
+
+    $shareText = "Clique no link acima para conhecer os detalhes da pessoa que te enviou esse link\n\n"
+        . $profileUrl
+        . "\n\n"
+        . "Clique abaixo para ver qual produto ela está oferecendo pra você:\n\n"
+        . $productUrl;
+
+    $whatsAppShareUrl = 'https://wa.me/?text=' . rawurlencode($shareText);
+@endphp
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{{ $metaTitle }}</title>
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $profileUrl }}">
+    <meta property="og:title" content="{{ $metaTitle }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:image" content="{{ $ogImageUrl }}">
+    <meta property="og:image:secure_url" content="{{ $ogImageUrl }}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="HUMANO">
+    <meta property="og:locale" content="pt_BR">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $metaTitle }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $ogImageUrl }}">
+
+    @vite(['resources/css/app.css'])
+</head>
+<body class="bg-[#ededed] text-[#111827] antialiased">
+    <main class="mx-auto min-h-[100svh] max-w-md px-3 py-3">
+        <section class="overflow-hidden rounded-[24px] border border-[#dfe3e8] bg-white shadow-[0_8px_28px_rgba(0,0,0,0.06)]">
+            <div class="bg-[#f7f7f7] px-5 pb-5 pt-5">
+                <div class="flex items-start gap-4">
+                    <img
+                        src="{{ $profile->photo_url }}"
+                        alt="Foto de {{ $profile->display_name }}"
+                        class="h-20 w-20 shrink-0 rounded-2xl object-cover shadow-sm ring-1 ring-black/5"
+                    >
+
+                    <div class="min-w-0 flex-1">
+                        <h1 class="truncate text-[24px] font-semibold text-[#111827]">
+                            {{ $profile->display_name }}
+                        </h1>
+
+                        <p class="mt-1 text-[15px] text-[#6b7280]">
+                            {{ $profile->phone ?? '+55 11 99999-0000' }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                    <div>
+                        @if($profile->is_verified)
+                            <span class="inline-flex items-center gap-1 rounded-full bg-[#e8f7ee] px-3 py-1.5 text-[13px] font-medium text-[#07c160] ring-1 ring-[#bfe8cf]">
+                                <span class="h-2 w-2 rounded-full bg-[#07c160]"></span>
+                                Verificado
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            id="shareProfileButton"
+                            class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#07c160] text-white shadow-sm transition hover:brightness-95"
+                            aria-label="Compartilhar perfil"
+                            data-share-title="{{ $metaTitle }}"
+                            data-share-text="{{ $shareText }}"
+                            data-share-url="{{ $profileUrl }}"
+                            data-whatsapp-url="{{ $whatsAppShareUrl }}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <path d="M8.59 13.51 15.42 17.49"></path>
+                                <path d="M15.41 6.51 8.59 10.49"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white px-5 py-4">
+                <div class="rounded-2xl bg-[#f7f7f7] px-4 py-4">
+                    <p class="text-[16px] leading-7 text-[#374151]">
+                        {{ $profile->bio }}
+                    </p>
+                </div>
+
+                <div class="mt-4 divide-y divide-[#eef1f4] overflow-hidden rounded-2xl border border-[#eef1f4] bg-white">
+                    <div class="flex items-center justify-between px-4 py-4">
+                        <span class="text-[14px] text-[#6b7280]">Status</span>
+                        <span class="text-[15px] font-medium text-[#111827]">
+                            {{ $profile->is_verified ? 'Perfil validado' : 'Perfil em análise' }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between px-4 py-4">
+                        <span class="text-[14px] text-[#6b7280]">Código</span>
+                        <span class="text-[15px] font-medium text-[#111827]">
+                            {{ $profile->public_code }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-between px-4 py-4">
+                        <span class="text-[14px] text-[#6b7280]">Telefone</span>
+                        <span class="text-[15px] font-medium text-[#111827]">
+                            {{ $profile->phone ?? '+55 11 99999-0000' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-4 rounded-2xl border border-[#d7f1e1] bg-[#f1fbf5] px-4 py-4">
+                    <p class="text-[14px] leading-6 text-[#3f4a5a]">
+                        Este perfil foi publicado para facilitar a confirmação pública de identidade e reforçar confiança em interações online.
+                    </p>
+                </div>
+
+                <div class="mt-4">
+                    <a
+                        href="{{ $productUrl }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex w-full items-center justify-center rounded-2xl bg-[#111827] px-4 py-3 text-[14px] font-medium text-white transition hover:opacity-95"
+                    >
+                        Ver produto oferecido
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-[#eef1f4] bg-[#fafafa] px-5 py-4">
+                <div class="flex items-center justify-between text-[13px] text-[#94a3b8]">
+                    <span class="truncate">humano.biologicbeing.com</span>
+                    <span class="truncate">{{ $profile->public_code }}</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            const shareButton = document.getElementById('shareProfileButton');
+
+            if (!shareButton) {
+                return;
+            }
+
+            shareButton.addEventListener('click', async function () {
+                const title = shareButton.dataset.shareTitle || document.title;
+                const text = shareButton.dataset.shareText || '';
+                const url = shareButton.dataset.shareUrl || window.location.href;
+                const whatsappUrl = shareButton.dataset.whatsappUrl || '';
+
+                try {
+                    if (navigator.share) {
+                        await navigator.share({
+                            title: title,
+                            text: text,
+                            url: url
+                        });
+                        return;
+                    }
+                } catch (error) {
+                    if (error && error.name === 'AbortError') {
+                        return;
+                    }
+                }
+
+                if (whatsappUrl) {
+                    window.location.href = whatsappUrl;
+                    return;
+                }
+
+                try {
+                    const fallbackText = text ? text : url;
+                    await navigator.clipboard.writeText(fallbackText);
+                    alert('Texto de compartilhamento copiado com sucesso.');
+                } catch (error) {
+                    alert('Não foi possível compartilhar automaticamente.');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
+----- CONTENT END -----
+
+
+===== FILE: resources/views/public/not-found.blade.php =====
+0 resources/views/public/not-found.blade.php
+----- CONTENT START -----
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/public/profile.blade.php =====
+74 resources/views/public/profile.blade.php
+----- CONTENT START -----
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ $metaTitle }}</title>
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ $profileUrl }}">
+<meta property="og:title" content="{{ $metaTitle }}">
+<meta property="og:description" content="{{ $metaDescription }}">
+<meta property="og:image" content="{{ $ogImageUrl }}">
+
+@vite(['resources/css/app.css'])
+
+</head>
+
+<body class="min-h-screen bg-[#07111d] text-white flex items-center justify-center">
+
+<div class="max-w-5xl w-full grid md:grid-cols-2 bg-[#0c1730] rounded-3xl overflow-hidden">
+
+<div class="p-6 flex items-center justify-center">
+
+<img
+src="{{ $profile->photo_url }}"
+class="rounded-2xl max-h-[480px] object-cover"
+/>
+
+</div>
+
+<div class="p-10 flex flex-col justify-center">
+
+<p class="text-sm text-white/60">
+{{ $profile->public_code }}
+</p>
+
+<h1 class="text-4xl font-bold mt-4">
+Site de verificação humana
+</h1>
+
+<p class="mt-6 text-xl text-white/80">
+A imagem acima foi verificada e pertence a um humano real.
+</p>
+
+<div class="mt-8 bg-green-400 text-black font-bold px-6 py-3 rounded-xl inline-block">
+VERIFICADO
+</div>
+
+<div class="mt-6 text-white/70">
+{{ $profile->display_name }}
+</div>
+
+@if($profile->phone)
+<div class="text-white/50">
+{{ $profile->phone }}
+</div>
+@endif
+
+<a
+href="{{ route('dashboard') }}"
+class="mt-10 inline-block bg-white text-black px-6 py-3 rounded-xl">
+Voltar
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+
+----- CONTENT END -----
+
+
+===== FILE: resources/views/welcome.blade.php =====
+65 resources/views/welcome.blade.php
+----- CONTENT START -----
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ config('app.name', 'Humano') }}</title>
+@vite(['resources/css/app.css','resources/js/app.js'])
+</head>
+
+<body class="min-h-screen overflow-hidden bg-[#08111d] text-white antialiased">
+
+<main class="flex min-h-screen items-center justify-center px-4">
+
+<section class="w-full max-w-6xl rounded-[28px] overflow-hidden bg-[linear-gradient(135deg,#07111d,#0c1730,#125f56)] shadow-2xl">
+
+<div class="grid min-h-[100svh] lg:grid-cols-2">
+
+<div class="flex items-center justify-center p-8">
+<div class="w-full max-w-[320px] rounded-3xl bg-white/10 p-4">
+<div class="h-[420px] rounded-2xl border border-dashed border-white/20 flex items-center justify-center text-center text-sm text-white/60">
+Exemplo de card público
+</div>
+</div>
+</div>
+
+<div class="flex flex-col justify-between p-8 lg:p-12">
+
+<div>
+<p class="text-xs uppercase tracking-[0.25em] text-white/50">HUMANO</p>
+
+<h1 class="mt-4 text-4xl font-bold leading-tight">
+Verificação humana com preview para WhatsApp
+</h1>
+
+<p class="mt-5 text-lg text-white/80">
+Crie um card público com sua identidade e compartilhe seu link de vendas com confiança.
+</p>
+</div>
+
+<div class="mt-10 flex flex-col gap-3 sm:flex-row">
+
+<a href="{{ route('login') }}"
+class="flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-slate-900">
+Entrar
+</a>
+
+@if (Route::has('register'))
+<a href="{{ route('register') }}"
+class="flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white">
+Registrar
+</a>
+@endif
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</body>
+</html>
+
+----- CONTENT END -----

@@ -3,84 +3,162 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\SellerLink;
+use App\Models\UserLink;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class LinkController extends Controller
 {
     public function index(Request $request)
     {
-        $links = $request->user()
-            ->links()
-            ->latest()
-            ->get();
+        $user = $request->user()->load([
+            'links' => fn ($query) => $query->orderBy('position'),
+            'activeSubscription',
+        ]);
 
         return view('dashboard.links.index', [
-            'links' => $links,
+            'user' => $user,
+            'links' => $user->links,
+            'linksLimit' => $user->salesLinksLimit(),
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate([
-            'checkout_url' => ['required', 'url', 'max:2048'],
+        $user = $request->user()->load([
+            'links' => fn ($query) => $query->orderBy('position'),
+            'activeSubscription',
         ]);
 
-        $token = $this->extractToken($data['checkout_url']);
-        if (!$token) {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:150'],
+            'url' => ['required', 'url', 'max:2048'],
+        ], [
+            'title.required' => 'Informe o título do link.',
+            'title.max' => 'O título deve ter no máximo 150 caracteres.',
+            'url.required' => 'Informe a URL do link.',
+            'url.url' => 'Informe uma URL válida.',
+            'url.max' => 'A URL deve ter no máximo 2048 caracteres.',
+        ]);
+
+        $limit = max(1, $user->salesLinksLimit());
+        $currentCount = $user->links()->count();
+
+        if ($currentCount >= $limit) {
+            throw ValidationException::withMessages([
+                'url' => 'Seu plano atingiu o limite de links permitidos.',
+            ]);
+        }
+
+        $nextPosition = ((int) $user->links()->max('position')) + 1;
+
+        try {
+            $user->links()->create([
+                'title' => trim($data['title']),
+                'url' => trim($data['url']),
+                'position' => $nextPosition,
+                'is_active' => true,
+            ]);
+
+            return redirect()
+                ->route('dashboard.links.index')
+                ->with('status', 'Link salvo com sucesso.');
+        } catch (\Throwable $e) {
+            Log::error('Erro ao criar link', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+            ]);
+
             return back()
                 ->withInput()
-                ->withErrors(['checkout_url' => 'URL inválida. Esperado formato: https://pay.hest.com.br/{uuid}']);
+                ->withErrors(['general' => 'Não foi possível salvar o link.']);
         }
+    }
 
-        // MVP: ainda não vamos buscar metadata aqui, só salvar.
-        // Depois: job para fazer GET no endpoint e preencher product_title, etc.
+    public function update(Request $request, UserLink $link): RedirectResponse
+    {
+        abort_unless($link->user_id === $request->user()->id, 403);
 
-        $slug = $this->generateUniqueSlug();
-
-        $request->user()->links()->create([
-            'token' => $token,
-            'checkout_url' => $data['checkout_url'],
-            'public_slug' => $slug,
-            'status' => 'active',
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:150'],
+            'url' => ['required', 'url', 'max:2048'],
+        ], [
+            'title.required' => 'Informe o título do link.',
+            'title.max' => 'O título deve ter no máximo 150 caracteres.',
+            'url.required' => 'Informe a URL do link.',
+            'url.url' => 'Informe uma URL válida.',
+            'url.max' => 'A URL deve ter no máximo 2048 caracteres.',
         ]);
 
-        return redirect()
-            ->route('dashboard.links.index')
-            ->with('status', 'Link criado com sucesso.');
-    }
+        try {
+            $link->update([
+                'title' => trim($data['title']),
+                'url' => trim($data['url']),
+            ]);
 
-    public function destroy(Request $request, SellerLink $link)
-    {
-        // Garantir que o link pertence ao usuário logado
-        if ($link->user_id !== $request->user()->id) {
-            abort(403);
+            return redirect()
+                ->route('dashboard.links.index')
+                ->with('status', 'Link atualizado com sucesso.');
+        } catch (\Throwable $e) {
+            Log::error('Erro ao atualizar link', [
+                'user_id' => $request->user()->id,
+                'link_id' => $link->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['general' => 'Não foi possível atualizar o link.']);
         }
-
-        $link->delete();
-
-        return redirect()
-            ->route('dashboard.links.index')
-            ->with('status', 'Link removido.');
     }
 
-    private function extractToken(string $url): ?string
+    public function toggle(Request $request, UserLink $link): RedirectResponse
     {
-        // Aceita qualquer URL cujo path tenha um UUID (padrão 8-4-4-4-12)
-        $pattern = '/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/';
-        if (preg_match($pattern, $url, $m)) {
-            return strtolower($m[1]);
+        abort_unless($link->user_id === $request->user()->id, 403);
+
+        try {
+            $link->update([
+                'is_active' => ! $link->is_active,
+            ]);
+
+            return redirect()
+                ->route('dashboard.links.index')
+                ->with('status', 'Status do link atualizado com sucesso.');
+        } catch (\Throwable $e) {
+            Log::error('Erro ao alternar link', [
+                'user_id' => $request->user()->id,
+                'link_id' => $link->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'general' => 'Não foi possível alterar o status do link.',
+            ]);
         }
-        return null;
     }
 
-    private function generateUniqueSlug(): string
+    public function destroy(Request $request, UserLink $link): RedirectResponse
     {
-        do {
-            $slug = Str::lower(Str::random(10));
-        } while (SellerLink::where('public_slug', $slug)->exists());
+        abort_unless($link->user_id === $request->user()->id, 403);
 
-        return $slug;
+        try {
+            $link->delete();
+
+            return redirect()
+                ->route('dashboard.links.index')
+                ->with('status', 'Link removido com sucesso.');
+        } catch (\Throwable $e) {
+            Log::error('Erro ao remover link', [
+                'user_id' => $request->user()->id,
+                'link_id' => $link->id,
+                'message' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors([
+                'general' => 'Não foi possível remover o link.',
+            ]);
+        }
     }
 }
