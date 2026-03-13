@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --hum-bg: #07111f;
+        --hum-bg-soft: #0b1728;
+        --hum-surface: #0f1c31;
+        --hum-surface-2: #13233d;
+        --hum-surface-3: #182b49;
+        --hum-border: rgba(160, 182, 215, 0.14);
+        --hum-border-strong: rgba(160, 182, 215, 0.24);
+        --hum-text: #f5f7fb;
+        --hum-text-soft: #a8b3c7;
+        --hum-text-muted: #7f8aa3;
+        --hum-primary: #9eff00;
+        --hum-primary-strong: #89e600;
+        --hum-primary-glow: rgba(158, 255, 0, 0.22);
+        --hum-danger: #ff5d73;
+        --hum-success: #39d98a;
+        --hum-warning: #ffcc4d;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply antialiased;
+        background:
+            radial-gradient(circle at top left, rgba(158,255,0,0.08), transparent 22%),
+            radial-gradient(circle at top right, rgba(64,122,255,0.12), transparent 18%),
+            linear-gradient(180deg, #06101d 0%, #081322 40%, #091525 100%);
+        color: var(--hum-text);
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(168, 179, 199, 0.35) transparent;
+    }
+
+    *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background: rgba(168, 179, 199, 0.25);
+        border-radius: 999px;
+    }
+}
+
+@layer components {
+    .hum-shell {
+        @apply min-h-screen;
+        background:
+            radial-gradient(circle at 15% 15%, rgba(158,255,0,0.08), transparent 18%),
+            radial-gradient(circle at 85% 10%, rgba(74,111,255,0.10), transparent 18%),
+            linear-gradient(180deg, #07111f 0%, #091525 100%);
+    }
+
+    .hum-container {
+        @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .hum-topbar {
+        @apply sticky top-0 z-40 border-b backdrop-blur-xl;
+        background: rgba(7, 17, 31, 0.82);
+        border-color: var(--hum-border);
+    }
+
+    .hum-brand {
+        @apply flex items-center gap-3;
+    }
+
+    .hum-card {
+        @apply rounded-[24px] border shadow-2xl transition duration-300;
+        background: linear-gradient(180deg, rgba(15,28,49,0.96), rgba(10,19,33,0.98));
+        border-color: var(--hum-border);
+        box-shadow:
+            0 10px 30px rgba(0,0,0,0.28),
+            inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    .hum-card-soft {
+        @apply rounded-[20px] border;
+        background: rgba(17, 30, 52, 0.78);
+        border-color: rgba(160, 182, 215, 0.10);
+    }
+
+    .hum-panel {
+        @apply rounded-[18px] border;
+        background: linear-gradient(180deg, rgba(18,32,55,0.92), rgba(12,23,40,0.96));
+        border-color: rgba(160, 182, 215, 0.12);
+    }
+
+    .hum-input {
+        @apply w-full rounded-2xl border px-4 py-3 text-sm outline-none transition duration-200;
+        background: rgba(8, 19, 37, 0.9);
+        color: var(--hum-text);
+        border-color: rgba(160, 182, 215, 0.14);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    .hum-input::placeholder {
+        color: var(--hum-text-muted);
+    }
+
+    .hum-input:focus {
+        border-color: rgba(158,255,0,0.45);
+        box-shadow:
+            0 0 0 4px rgba(158,255,0,0.10),
+            0 0 0 1px rgba(158,255,0,0.18) inset;
+    }
+
+    .hum-label {
+        @apply mb-2 block text-sm font-medium;
+        color: #dbe4f3;
+    }
+
+    .hum-btn {
+        @apply inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition duration-200;
+    }
+
+    .hum-btn-primary {
+        @apply hum-btn;
+        background: linear-gradient(180deg, #a7ff1e 0%, #92ef00 100%);
+        color: #0a111d;
+        box-shadow:
+            0 10px 24px rgba(158,255,0,0.18),
+            0 0 0 1px rgba(255,255,255,0.08) inset;
+    }
+
+    .hum-btn-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+        box-shadow:
+            0 14px 28px rgba(158,255,0,0.24),
+            0 0 0 1px rgba(255,255,255,0.10) inset;
+    }
+
+    .hum-btn-secondary {
+        @apply hum-btn border;
+        background: rgba(18, 32, 55, 0.82);
+        border-color: rgba(160, 182, 215, 0.16);
+        color: var(--hum-text);
+    }
+
+    .hum-btn-secondary:hover {
+        background: rgba(22, 38, 64, 0.94);
+    }
+
+    .hum-btn-danger {
+        @apply hum-btn;
+        background: rgba(255, 93, 115, 0.12);
+        color: #ff9baa;
+        border: 1px solid rgba(255, 93, 115, 0.18);
+    }
+
+    .hum-badge {
+        @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold;
+    }
+
+    .hum-badge-success {
+        background: rgba(57, 217, 138, 0.12);
+        color: #72e7ac;
+        border: 1px solid rgba(57, 217, 138, 0.18);
+    }
+
+    .hum-badge-muted {
+        background: rgba(168, 179, 199, 0.08);
+        color: #b9c3d4;
+        border: 1px solid rgba(168, 179, 199, 0.10);
+    }
+
+    .hum-section-title {
+        @apply text-2xl font-bold tracking-tight sm:text-3xl;
+        color: #f6f8fc;
+    }
+
+    .hum-section-text {
+        @apply text-sm leading-6;
+        color: var(--hum-text-soft);
+    }
+
+    .hum-grid-bg {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size: 24px 24px;
+        background-position: center;
+    }
+
+    .hum-glow {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hum-glow::before {
+        content: "";
+        position: absolute;
+        inset: -30% auto auto -10%;
+        width: 180px;
+        height: 180px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(158,255,0,0.22), transparent 70%);
+        pointer-events: none;
+    }
+
+    .hum-fade-up {
+        animation: humFadeUp 0.45s ease-out both;
+    }
+
+    .hum-fade-in {
+        animation: humFadeIn 0.35s ease-out both;
+    }
+}
+
+@keyframes humFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes humFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
