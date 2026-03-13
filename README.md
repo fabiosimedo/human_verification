@@ -1,31 +1,45 @@
-docker exec -it humano_app php artisan view:clear &&
-docker exec -it humano_app php artisan route:clear &&
-docker exec -it humano_app php artisan config:clear &&
-docker exec -it humano_app php artisan cache:clear &&
-docker-compose restart app
+# HUMANO
 
+Sistema SaaS para **verificação de identidade em links de checkout compartilhados via WhatsApp**.
 
-mypasswd1234
+O HUMANO permite que vendedores, afiliados ou produtores criem um **card público verificado**, exibindo suas informações e o produto associado ao link de pagamento, aumentando a **confiança do comprador antes de clicar no checkout**.
 
-docker exec -it humano_db mysql -uhumano_user -phumano_pass humano
+🌐 Demo pública  
+https://humano.biologicbeing.com/
 
-docker exec -it humano_app tail -n 50 storage/logs/laravel.log
+---
 
-(
-echo "===== ROUTES ====="
-cat routes/web.php
+# Problema que o HUMANO resolve
 
-echo -e "\n===== CONTROLLERS ====="
-find app/Http/Controllers -type f -name "*.php" -print -exec cat {} \;
+Links de checkout enviados via WhatsApp geram desconfiança nos compradores.
 
-echo -e "\n===== MODELS ====="
-find app/Models -type f -name "*.php" -print -exec cat {} \;
+Exemplo comum:
 
-echo -e "\n===== VIEWS ====="
-find resources/views -type f -name "*.blade.php" -print -exec cat {} \;
+> “Esse link é seguro?”  
+> “Esse vendedor é real?”
 
-) > dump_humano_codigo.txt
+O HUMANO resolve isso criando uma **página de verificação visual**, mostrando:
 
-scp root@172.233.29.200:/srv/humano/human_verification/humano_schema.sql ~/Desktop/
+- identidade do vendedor
+- telefone
+- produto
+- preço
+- métodos de pagamento
+- botão de compra
 
-scp ~/Desktop/install_humano_mobile_theme.sh root@172.233.29.200:/srv/humano/human_verification
+Tudo em uma página pública otimizada para **preview no WhatsApp**.
+
+---
+
+# Como funciona
+
+Fluxo do sistema:
+
+1. Usuário cria conta
+2. Cadastra seu perfil
+3. Adiciona um link de checkout
+4. O sistema consulta automaticamente a API do checkout
+5. Os dados do produto são salvos
+6. Um **card público verificável** é gerado
+
+Exemplo de card público:
